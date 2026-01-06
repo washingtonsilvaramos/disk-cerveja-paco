@@ -127,6 +127,18 @@ button:disabled {
     font-size: 34px;
     text-decoration: none;
 }
+
+#painelAdmin, #modoEntregador {
+    background: #1c1c1c;
+    border-radius: 14px;
+    padding: 14px;
+    margin-top: 20px;
+    display: none;
+}
+
+#painelAdmin h3, #modoEntregador h3 {
+    margin-top: 0;
+}
 </style>
 </head>
 
@@ -168,11 +180,29 @@ button:disabled {
 <input type="text" id="cupom" placeholder="Digite o cupom">
 
 <div class="section-title">📍 Entrega</div>
+<select id="bairro" onchange="calcularTotal()">
+    <option value="5">Centro - R$5</option>
+    <option value="7">Bairro A - R$7</option>
+    <option value="10">Bairro B - R$10</option>
+    <option value="12">Bairro C - R$12</option>
+</select>
 <button onclick="pegarLocalizacao()">📍 Usar minha localização</button>
 
 <div class="total" id="total">Total: R$ 0,00</div>
 
 <button id="btnPedido" onclick="finalizarPedido()">Finalizar Pedido no WhatsApp</button>
+
+<!-- PAINEL ADMIN -->
+<div id="painelAdmin">
+    <h3>📦 Painel de Estoque</h3>
+    <div id="estoqueAdmin"></div>
+</div>
+
+<!-- MODO ENTREGADOR -->
+<div id="modoEntregador">
+    <h3>🛵 Modo Entregador</h3>
+    <div id="entregas"></div>
+</div>
 
 </div>
 
@@ -188,10 +218,11 @@ const estoque = {
 };
 
 let localizacao = "";
+let pedidosEntregador = [];
 
 function horarioValido(){
     const h = new Date().getHours();
-    return h >= 19 || h < 0;
+    return h >= 19;
 }
 
 function calcularTotal(){
@@ -210,14 +241,19 @@ function calcularTotal(){
         total += qtd * precos[id];
     }
 
-    let cupom = document.getElementById("cupom").value;
-    if(cupom === "PRIMEIRACOMPRA" && !localStorage.getItem("cupom_usado")){
+    // Cupom
+    if(document.getElementById("cupom").value === "PRIMEIRACOMPRA" && !localStorage.getItem("cupom_usado")){
         total -= 5;
     }
+
+    // Bairro/Entrega
+    let taxa = parseFloat(document.getElementById("bairro").value);
+    total += taxa;
 
     document.getElementById("total").innerText = "Total: R$ " + total.toFixed(2);
 }
 
+// Localização
 function pegarLocalizacao(){
     navigator.geolocation.getCurrentPosition(pos => {
         localizacao = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
@@ -225,6 +261,7 @@ function pegarLocalizacao(){
     });
 }
 
+// Finalizar pedido
 function finalizarPedido(){
     if(!horarioValido()){
         alert("Pedidos apenas das 19:00 às 00:00");
@@ -237,13 +274,51 @@ function finalizarPedido(){
     pedido += `%0A📍 Localização: ${localizacao || "Não enviada"}`;
     pedido += `%0A💵 ${total}`;
 
+    // Cupom
     if(document.getElementById("cupom").value === "PRIMEIRACOMPRA"){
         localStorage.setItem("cupom_usado", "true");
         pedido += `%0A🎟 Cupom PRIMEIRACOMPRA`;
     }
 
+    // Adiciona ao modo entregador
+    pedidosEntregador.push({
+        pedido: pedido,
+        local: localizacao
+    });
+    atualizarModoEntregador();
+
     window.open(`https://wa.me/5598999999999?text=${pedido}`);
 }
+
+// Painel admin simples
+function mostrarPainelAdmin(){
+    let senha = prompt("Digite a senha do painel:");
+    if(senha === "ADMIN123"){ // senha simples
+        document.getElementById("painelAdmin").style.display = "block";
+        let html = "";
+        for(let key in estoque){
+            html += `${key}: ${estoque[key]} unidades<br>`;
+        }
+        document.getElementById("estoqueAdmin").innerHTML = html;
+    } else {
+        alert("Senha incorreta!");
+    }
+}
+
+// Modo entregador
+function atualizarModoEntregador(){
+    let div = document.getElementById("entregas");
+    let html = "";
+    pedidosEntregador.forEach((p,i)=>{
+        html += `Pedido ${i+1}: <a href="${p.local}" target="_blank">📍 Ver localização</a><br>`;
+    });
+    document.getElementById("modoEntregador").style.display = "block";
+    div.innerHTML = html;
+}
+
+// Para teste: mostrar painel admin no carregamento (pode ser removido)
+// mostrarPainelAdmin();
+
 </script>
 
 </body>
