@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Disk Conveniência Paço 🍺</title>
+
+<style>
+:root {
+    --primary: #f7c600;
+    --dark: #0f0f0f;
+    --card: #1b1b1b;
+    --success: #25d366;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: var(--dark);
+    color: #fff;
+    padding-bottom: 120px;
+}
+
+header {
+    background: linear-gradient(135deg, #f7c600, #ffdd55);
+    color: #000;
+    padding: 18px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.subheader {
+    background: #121212;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.container {
+    padding: 15px;
+    max-width: 600px;
+    margin: auto;
+}
+
+.section-title {
+    margin: 25px 0 10px;
+    font-size: 18px;
+    color: var(--primary);
+    border-left: 4px solid var(--primary);
+    padding-left: 8px;
+}
+
+.card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.price {
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.qty {
+    width: 60px;
+    padding: 6px;
+    border-radius: 6px;
+    border: none;
+    text-align: center;
+}
+
+select, input[type=text] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    margin-top: 10px;
+    background: #222;
+    color: #fff;
+}
+
+button {
+    width: 100%;
+    padding: 18px;
+    background: var(--success);
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 14px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+button:disabled {
+    background: #555;
+}
+
+.total {
+    font-size: 24px;
+    text-align: center;
+    color: var(--primary);
+    margin-top: 15px;
+}
+
+.whatsapp {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    background: var(--success);
+    color: #fff;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 34px;
+    text-decoration: none;
+}
+</style>
+</head>
+
+<body>
+
+<header>🍺 Disk Conveniência Paço</header>
+<div class="subheader">Pedidos das 19:00 às 00:00 • Entrega própria</div>
+
+<div class="container">
+
+<div class="section-title">🍺 Produtos</div>
+
+<div class="card">
+    Skol Lata 350ml (R$ 6,50)
+    <input type="number" id="skol" class="qty" value="0" min="0" oninput="calcularTotal()">
+</div>
+
+<div class="card">
+    Brahma Lata 350ml (R$ 6,50)
+    <input type="number" id="brahma" class="qty" value="0" min="0" oninput="calcularTotal()">
+</div>
+
+<div class="card">
+    Heineken Long Neck (R$ 11,00)
+    <input type="number" id="heineken" class="qty" value="0" min="0" oninput="calcularTotal()">
+</div>
+
+<div class="card">
+    Coca-Cola Lata (R$ 6,00)
+    <input type="number" id="coca" class="qty" value="0" min="0" oninput="calcularTotal()">
+</div>
+
+<div class="card">
+    Amendoim Japonês (R$ 5,00)
+    <input type="number" id="amendoim" class="qty" value="0" min="0" oninput="calcularTotal()">
+</div>
+
+<div class="section-title">🎟 Cupom</div>
+<input type="text" id="cupom" placeholder="Digite o cupom">
+
+<div class="section-title">📍 Entrega</div>
+<button onclick="pegarLocalizacao()">📍 Usar minha localização</button>
+
+<div class="total" id="total">Total: R$ 0,00</div>
+
+<button id="btnPedido" onclick="finalizarPedido()">Finalizar Pedido no WhatsApp</button>
+
+</div>
+
+<a class="whatsapp" href="https://wa.me/5598999999999" target="_blank">💬</a>
+
+<script>
+const estoque = {
+    skol: 50,
+    brahma: 50,
+    heineken: 30,
+    coca: 40,
+    amendoim: 40
+};
+
+let localizacao = "";
+
+function horarioValido(){
+    const h = new Date().getHours();
+    return h >= 19 || h < 0;
+}
+
+function calcularTotal(){
+    let total = 0;
+    const precos = {
+        skol:6.5, brahma:6.5, heineken:11, coca:6, amendoim:5
+    };
+
+    for(let id in precos){
+        let qtd = parseInt(document.getElementById(id).value) || 0;
+        if(qtd > estoque[id]){
+            alert(`Estoque insuficiente para ${id}`);
+            document.getElementById(id).value = estoque[id];
+            qtd = estoque[id];
+        }
+        total += qtd * precos[id];
+    }
+
+    let cupom = document.getElementById("cupom").value;
+    if(cupom === "PRIMEIRACOMPRA" && !localStorage.getItem("cupom_usado")){
+        total -= 5;
+    }
+
+    document.getElementById("total").innerText = "Total: R$ " + total.toFixed(2);
+}
+
+function pegarLocalizacao(){
+    navigator.geolocation.getCurrentPosition(pos => {
+        localizacao = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+        alert("Localização capturada!");
+    });
+}
+
+function finalizarPedido(){
+    if(!horarioValido()){
+        alert("Pedidos apenas das 19:00 às 00:00");
+        return;
+    }
+
+    let pedido = "🍺 *Pedido Disk Conveniência Paço*%0A";
+    let total = document.getElementById("total").innerText;
+
+    pedido += `%0A📍 Localização: ${localizacao || "Não enviada"}`;
+    pedido += `%0A💵 ${total}`;
+
+    if(document.getElementById("cupom").value === "PRIMEIRACOMPRA"){
+        localStorage.setItem("cupom_usado", "true");
+        pedido += `%0A🎟 Cupom PRIMEIRACOMPRA`;
+    }
+
+    window.open(`https://wa.me/5598999999999?text=${pedido}`);
+}
+</script>
+
+</body>
+</html>
