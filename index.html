@@ -11,7 +11,6 @@
     --success:#25d366;
     --danger:#ff4444;
 }
-
 *{box-sizing:border-box;font-family:'Segoe UI',Arial;}
 body{
     margin:0;
@@ -107,10 +106,30 @@ button{
     padding:16px;
     margin-top:25px;
 }
-.estoqueItem{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;}
-.estoqueItem input{width:80px;padding:6px;border-radius:8px;}
-.estoqueItem button{background:var(--danger);color:#fff;border:none;padding:6px 10px;border-radius:8px;}
-.relatorio{background:#1c1c1c;padding:10px;border-radius:10px;margin-top:10px;}
+.estoqueItem{
+    display:flex;
+    gap:6px;
+    margin-bottom:8px;
+    flex-wrap:wrap;
+}
+.estoqueItem input{
+    width:80px;
+    padding:6px;
+    border-radius:8px;
+}
+.estoqueItem button{
+    background:var(--danger);
+    color:#fff;
+    border:none;
+    padding:6px 10px;
+    border-radius:8px;
+}
+.relatorio{
+    background:#1c1c1c;
+    padding:10px;
+    border-radius:10px;
+    margin-top:10px;
+}
 </style>
 </head>
 
@@ -125,7 +144,7 @@ button{
 <div id="produtosContainer"></div>
 
 <div class="section-title">📍 Entrega</div>
-<select id="bairro" onchange="calcularTotal()">
+<select id="bairroEntrega" onchange="calcularTotal()">
 <option value="5">Centro - R$5</option>
 <option value="7">Bairro A - R$7</option>
 <option value="10">Bairro B - R$10</option>
@@ -138,6 +157,7 @@ button{
 <input id="nomeCliente" placeholder="Nome">
 <input id="rua" placeholder="Rua">
 <input id="numero" placeholder="Número">
+<input id="bairroCliente" placeholder="Bairro">
 <input id="complemento" placeholder="Complemento">
 <input id="referencia" placeholder="Referência">
 
@@ -147,13 +167,20 @@ button{
 <button onclick="mostrarPainelAdmin()">🔑 Painel Administrativo</button>
 
 <div id="painelAdmin">
-<h3>📦 Estoque</h3>
+
+<h3>📦 Estoque (editar / remover)</h3>
 <div id="estoqueAdmin"></div>
+
+<h3>➕ Adicionar Produto</h3>
+<input id="novoNome" placeholder="Nome do produto">
+<input id="novoQtd" type="number" placeholder="Quantidade">
+<input id="novoPreco" type="number" placeholder="Preço">
+<button onclick="adicionarProduto()">Adicionar Produto</button>
 
 <h3>📊 Relatório de Vendas</h3>
 <div id="relatorioVendas"></div>
-</div>
 
+</div>
 </div>
 
 <a class="whatsapp" href="https://wa.me/5598981102515" target="_blank">💬</a>
@@ -171,6 +198,7 @@ let estoque = JSON.parse(localStorage.getItem("estoque")) || {
 let vendas = JSON.parse(localStorage.getItem("vendas")) || [];
 let localizacao="";
 
+/* PRODUTOS */
 function renderizarProdutos(){
     produtosContainer.innerHTML="";
     for(let k in estoque){
@@ -183,17 +211,19 @@ function renderizarProdutos(){
 }
 renderizarProdutos();
 
+/* TOTAL */
 function calcularTotal(){
     let total=0;
     for(let k in estoque){
-        let q=document.getElementById(k)?.value||0;
+        let q=parseInt(document.getElementById(k)?.value)||0;
         total+=q*estoque[k].preco;
     }
-    total+=parseFloat(bairro.value);
+    total+=parseFloat(bairroEntrega.value);
     totalDiv.innerText="Total: R$ "+total.toFixed(2);
 }
 const totalDiv=document.getElementById("total");
 
+/* GEO */
 function pegarLocalizacao(){
     navigator.geolocation.getCurrentPosition(p=>{
         localizacao=`https://maps.google.com/?q=${p.coords.latitude},${p.coords.longitude}`;
@@ -201,6 +231,7 @@ function pegarLocalizacao(){
     });
 }
 
+/* FINALIZAR */
 function finalizarPedido(){
     let total=parseFloat(totalDiv.innerText.replace("Total: R$",""));
     if(total<VALOR_MINIMO){
@@ -209,20 +240,32 @@ function finalizarPedido(){
     }
 
     let pedido="🍺 *Pedido Gelada Express*%0A";
+
     for(let k in estoque){
-        let q=document.getElementById(k).value;
-        if(q>0) pedido+=`• ${k}: ${q}%0A`;
+        let q=parseInt(document.getElementById(k).value)||0;
+        if(q>0){
+            pedido+=`• ${k}: ${q}%0A`;
+            estoque[k].qtd -= q;
+        }
     }
-    pedido+=`%0A${totalDiv.innerText}%0A`;
-    pedido+=`%0A🏠 ${rua.value}, ${numero.value}`;
+
+    pedido+=`%0A${totalDiv.innerText}`;
+    pedido+=`%0A🏠 ${rua.value}, ${numero.value} - ${bairroCliente.value}`;
     if(localizacao) pedido+=`%0A📍 ${localizacao}`;
 
-    vendas.push({data:new Date().toLocaleString(),total});
+    vendas.push({data:new Date().toISOString(),total});
+
+    localStorage.setItem("estoque",JSON.stringify(estoque));
     localStorage.setItem("vendas",JSON.stringify(vendas));
 
-    window.open(`https://wa.me/5598981102515?text=${pedido}`);
+    renderizarProdutos();
+    atualizarPainelAdmin();
+    atualizarRelatorio();
+
+    window.open(`https://wa.me/5598999999999?text=${pedido}`);
 }
 
+/* ADMIN */
 function mostrarPainelAdmin(){
     if(prompt("Senha:")==="ADMIN123"){
         painelAdmin.style.display="block";
@@ -238,25 +281,57 @@ function atualizarPainelAdmin(){
         let d=document.createElement("div");
         d.className="estoqueItem";
         d.innerHTML=`
-        <input value="${k}">
-        <input type="number" value="${p.qtd}">
-        <input type="number" value="${p.preco}">
-        `;
+        <input value="${k}" onchange="editarNome('${k}',this.value)">
+        <input type="number" value="${p.qtd}" onchange="editarProduto('${k}','qtd',this.value)">
+        <input type="number" value="${p.preco}" onchange="editarProduto('${k}','preco',this.value)">
+        <button onclick="removerProduto('${k}')">🗑</button>`;
         estoqueAdmin.appendChild(d);
     }
 }
 
+function editarProduto(k,c,v){
+    estoque[k][c]=parseFloat(v)||0;
+    salvar();
+}
+function editarNome(oldKey,newKey){
+    if(!newKey||estoque[newKey])return;
+    estoque[newKey]=estoque[oldKey];
+    delete estoque[oldKey];
+    salvar();
+}
+function adicionarProduto(){
+    if(!novoNome.value)return;
+    estoque[novoNome.value]={qtd:+novoQtd.value||0,preco:+novoPreco.value||0};
+    novoNome.value=novoQtd.value=novoPreco.value="";
+    salvar();
+}
+function removerProduto(k){
+    delete estoque[k];
+    salvar();
+}
+function salvar(){
+    localStorage.setItem("estoque",JSON.stringify(estoque));
+    renderizarProdutos();
+    atualizarPainelAdmin();
+}
+
+/* RELATÓRIO */
 function atualizarRelatorio(){
-    relatorioVendas.innerHTML="";
+    let hoje=0,semana=0,mes=0;
+    let agora=new Date();
     vendas.forEach(v=>{
-        let d=document.createElement("div");
-        d.className="relatorio";
-        d.innerText=`${v.data} - R$ ${v.total.toFixed(2)}`;
-        relatorioVendas.appendChild(d);
+        let d=new Date(v.data);
+        let diff=(agora-d)/(1000*60*60*24);
+        if(diff<1)hoje+=v.total;
+        if(diff<7)semana+=v.total;
+        if(d.getMonth()===agora.getMonth())mes+=v.total;
     });
+    relatorioVendas.innerHTML=`
+    <div class="relatorio">Hoje: R$ ${hoje.toFixed(2)}</div>
+    <div class="relatorio">Semana: R$ ${semana.toFixed(2)}</div>
+    <div class="relatorio">Mês: R$ ${mes.toFixed(2)}</div>`;
 }
 </script>
 
 </body>
 </html>
-
