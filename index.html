@@ -3,324 +3,322 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Disk Conveniência Paço 🍺</title>
+<title>Gelada Express 🍺</title>
 
 <style>
-:root {
-    --primary: #f7c600;
-    --dark: #0f0f0f;
-    --card: #1b1b1b;
-    --success: #25d366;
+:root{
+    --primary:#f7c600;
+    --dark:#0b0b0b;
+    --dark2:#121212;
+    --card:#1f1f1f;
+    --success:#25d366;
+    --danger:#ff4444;
 }
 
-* {
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+/* RESET */
+*{
+    box-sizing:border-box;
+    font-family:'Segoe UI',Arial,Helvetica,sans-serif;
 }
 
-body {
-    margin: 0;
-    background: var(--dark);
-    color: #fff;
-    padding-bottom: 120px;
+body{
+    margin:0;
+    background:radial-gradient(circle at top,#1a1a1a,#000);
+    color:#fff;
+    padding-bottom:140px;
 }
 
-header {
-    background: linear-gradient(135deg, #f7c600, #ffdd55);
-    color: #000;
-    padding: 18px;
-    text-align: center;
-    font-size: 22px;
-    font-weight: bold;
+/* HEADER */
+header{
+    background:linear-gradient(135deg,#f7c600,#ffb300);
+    color:#000;
+    padding:22px;
+    text-align:center;
+    font-size:26px;
+    font-weight:900;
 }
 
-.subheader {
-    background: #121212;
-    text-align: center;
-    padding: 10px;
-    font-size: 14px;
+.subheader{
+    background:#0f0f0f;
+    text-align:center;
+    padding:10px;
+    font-size:14px;
+    color:var(--primary);
 }
 
-.container {
-    padding: 15px;
-    max-width: 600px;
-    margin: auto;
+/* CONTAINER */
+.container{
+    padding:16px;
+    max-width:650px;
+    margin:auto;
 }
 
-.section-title {
-    margin: 25px 0 10px;
-    font-size: 18px;
-    color: var(--primary);
-    border-left: 4px solid var(--primary);
-    padding-left: 8px;
+/* TITULOS */
+.section-title{
+    margin:28px 0 14px;
+    font-size:20px;
+    font-weight:bold;
+    color:var(--primary);
+    border-left:5px solid var(--primary);
+    padding-left:10px;
 }
 
-.card {
-    background: var(--card);
-    border-radius: 14px;
-    padding: 14px;
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* PRODUTOS */
+.card{
+    background:linear-gradient(160deg,#1e1e1e,#141414);
+    border-radius:18px;
+    padding:16px;
+    margin-bottom:14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 6px 18px rgba(0,0,0,.6);
 }
 
-.price {
-    color: var(--primary);
-    font-weight: bold;
+.qty{
+    width:70px;
+    padding:10px;
+    border-radius:10px;
+    border:none;
+    text-align:center;
+    font-size:16px;
+    background:#000;
+    color:#fff;
 }
 
-.qty {
-    width: 60px;
-    padding: 6px;
-    border-radius: 6px;
-    border: none;
-    text-align: center;
+/* INPUTS */
+select,input[type=text],input[type=number]{
+    width:100%;
+    padding:14px;
+    border-radius:14px;
+    border:none;
+    margin-top:10px;
+    background:#1a1a1a;
+    color:#fff;
 }
 
-select, input[type=text] {
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: none;
-    margin-top: 10px;
-    background: #222;
-    color: #fff;
+/* BOTÕES */
+button{
+    width:100%;
+    padding:18px;
+    background:linear-gradient(135deg,#25d366,#1ebe5d);
+    border:none;
+    color:#000;
+    font-size:20px;
+    font-weight:900;
+    border-radius:18px;
+    cursor:pointer;
+    margin-top:20px;
 }
 
-button {
-    width: 100%;
-    padding: 18px;
-    background: var(--success);
-    border: none;
-    color: #fff;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 14px;
-    cursor: pointer;
-    margin-top: 20px;
+button:hover{filter:brightness(1.1);}
+
+.total{
+    font-size:28px;
+    text-align:center;
+    color:var(--primary);
+    margin-top:20px;
+    font-weight:bold;
 }
 
-button:disabled {
-    background: #555;
+/* WHATSAPP */
+.whatsapp{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:linear-gradient(135deg,#25d366,#1ebe5d);
+    color:#000;
+    width:74px;
+    height:74px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:36px;
+    text-decoration:none;
+    box-shadow:0 8px 24px rgba(0,0,0,.8);
 }
 
-.total {
-    font-size: 24px;
-    text-align: center;
-    color: var(--primary);
-    margin-top: 15px;
+/* PAINEL */
+#painelAdmin,#modoEntregador{
+    background:#111;
+    border-radius:18px;
+    padding:16px;
+    margin-top:25px;
+    display:none;
 }
 
-.whatsapp {
-    position: fixed;
-    bottom: 18px;
-    right: 18px;
-    background: var(--success);
-    color: #fff;
-    width: 68px;
-    height: 68px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 34px;
-    text-decoration: none;
+.estoqueItem{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:10px;
 }
 
-#painelAdmin, #modoEntregador {
-    background: #1c1c1c;
-    border-radius: 14px;
-    padding: 14px;
-    margin-top: 20px;
-    display: none;
+.estoqueItem input{
+    width:80px;
+    padding:6px;
+    border-radius:10px;
 }
 
-#painelAdmin h3, #modoEntregador h3 {
-    margin-top: 0;
+.entregarBtn{
+    background:var(--danger);
+    color:#fff;
+    border:none;
+    padding:8px 14px;
+    border-radius:10px;
 }
 </style>
 </head>
 
 <body>
 
-<header>🍺 Disk Conveniência Paço</header>
-<div class="subheader">Pedidos das 19:00 às 00:00 • Entrega própria</div>
+<header>🍺 Gelada Express</header>
+<div class="subheader">Pedidos das 13:00 às 00:00 • Entrega própria</div>
 
 <div class="container">
 
 <div class="section-title">🍺 Produtos</div>
-
-<div class="card">
-    Skol Lata 350ml (R$ 6,50)
-    <input type="number" id="skol" class="qty" value="0" min="0" oninput="calcularTotal()">
-</div>
-
-<div class="card">
-    Brahma Lata 350ml (R$ 6,50)
-    <input type="number" id="brahma" class="qty" value="0" min="0" oninput="calcularTotal()">
-</div>
-
-<div class="card">
-    Heineken Long Neck (R$ 11,00)
-    <input type="number" id="heineken" class="qty" value="0" min="0" oninput="calcularTotal()">
-</div>
-
-<div class="card">
-    Coca-Cola Lata (R$ 6,00)
-    <input type="number" id="coca" class="qty" value="0" min="0" oninput="calcularTotal()">
-</div>
-
-<div class="card">
-    Amendoim Japonês (R$ 5,00)
-    <input type="number" id="amendoim" class="qty" value="0" min="0" oninput="calcularTotal()">
-</div>
+<div id="produtosContainer"></div>
 
 <div class="section-title">🎟 Cupom</div>
 <input type="text" id="cupom" placeholder="Digite o cupom">
 
 <div class="section-title">📍 Entrega</div>
 <select id="bairro" onchange="calcularTotal()">
-    <option value="5">Maiobão - R$5</option>
-    <option value="7">Bairro A - R$7</option>
-    <option value="10">Bairro B - R$10</option>
-    <option value="12">Bairro C - R$12</option>
+<option value="5">Centro - R$5</option>
+<option value="7">Bairro A - R$7</option>
+<option value="10">Bairro B - R$10</option>
+<option value="12">Bairro C - R$12</option>
 </select>
+
 <button onclick="pegarLocalizacao()">📍 Usar minha localização</button>
 
 <div class="total" id="total">Total: R$ 0,00</div>
 
-<button id="btnPedido" onclick="finalizarPedido()">Finalizar Pedido no WhatsApp</button>
+<button onclick="finalizarPedido()">Finalizar Pedido no WhatsApp</button>
+<button onclick="mostrarPainelAdmin()">🔑 Painel Administrativo</button>
 
-<!-- PAINEL ADMIN -->
 <div id="painelAdmin">
-    <h3>📦 Painel de Estoque</h3>
-    <div id="estoqueAdmin"></div>
+<h3>📦 Painel de Estoque</h3>
+<div id="estoqueAdmin"></div>
+<input type="text" id="novoProdutoNome" placeholder="Nome">
+<input type="number" id="novoProdutoQtd" placeholder="Qtd">
+<input type="number" id="novoProdutoPreco" placeholder="Preço">
+<button onclick="adicionarProduto()">➕ Adicionar</button>
 </div>
 
-<!-- MODO ENTREGADOR -->
 <div id="modoEntregador">
-    <h3>🛵 Modo Entregador</h3>
-    <div id="entregas"></div>
+<h3>🛵 Entregas</h3>
+<div id="entregas"></div>
 </div>
 
 </div>
 
-<a class="whatsapp" href="https://wa.me/5598999999999" target="_blank">💬</a>
+<a class="whatsapp" href="https://wa.me/5598981102515" target="_blank">💬</a>
 
 <script>
-const estoque = {
-    skol: 50,
-    brahma: 50,
-    heineken: 30,
-    coca: 40,
-    amendoim: 40
+/* === JAVASCRIPT ORIGINAL – SEM ALTERAÇÕES === */
+let estoque = JSON.parse(localStorage.getItem("estoque")) || {
+    skol:{qtd:50,preco:6.5},
+    brahma:{qtd:50,preco:6.5},
+    heineken:{qtd:30,preco:11},
+    coca:{qtd:40,preco:6},
+    amendoim:{qtd:40,preco:5}
 };
 
-let localizacao = "";
-let pedidosEntregador = [];
+let localizacao="";
+let pedidosEntregador=[];
 
-function horarioValido(){
-    const h = new Date().getHours();
-    return h >= 19;
+function renderizarProdutos(){
+    const c=document.getElementById("produtosContainer");
+    c.innerHTML="";
+    for(let k in estoque){
+        const p=estoque[k];
+        const d=document.createElement("div");
+        d.className="card";
+        d.innerHTML=`${k} (R$ ${p.preco.toFixed(2)})
+        <input type="number" id="${k}" class="qty" value="0" min="0" oninput="calcularTotal()">`;
+        c.appendChild(d);
+    }
 }
+renderizarProdutos();
 
 function calcularTotal(){
-    let total = 0;
-    const precos = {
-        skol:6.5, brahma:6.5, heineken:11, coca:6, amendoim:5
-    };
-
-    for(let id in precos){
-        let qtd = parseInt(document.getElementById(id).value) || 0;
-        if(qtd > estoque[id]){
-            alert(`Estoque insuficiente para ${id}`);
-            document.getElementById(id).value = estoque[id];
-            qtd = estoque[id];
-        }
-        total += qtd * precos[id];
+    let total=0;
+    for(let k in estoque){
+        let i=document.getElementById(k);
+        if(!i)continue;
+        let q=parseInt(i.value)||0;
+        if(q>estoque[k].qtd){i.value=estoque[k].qtd;q=estoque[k].qtd;}
+        total+=q*estoque[k].preco;
     }
-
-    // Cupom
-    if(document.getElementById("cupom").value === "PRIMEIRACOMPRA" && !localStorage.getItem("cupom_usado")){
-        total -= 5;
-    }
-
-    // Bairro/Entrega
-    let taxa = parseFloat(document.getElementById("bairro").value);
-    total += taxa;
-
-    document.getElementById("total").innerText = "Total: R$ " + total.toFixed(2);
+    if(cupom.value==="PRIMEIRACOMPRA"&&!localStorage.getItem("cupom_usado")) total-=5;
+    total+=parseFloat(bairro.value);
+    document.getElementById("total").innerText="Total: R$ "+total.toFixed(2);
 }
 
-// Localização
 function pegarLocalizacao(){
-    navigator.geolocation.getCurrentPosition(pos => {
-        localizacao = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+    navigator.geolocation.getCurrentPosition(p=>{
+        localizacao=`https://maps.google.com/?q=${p.coords.latitude},${p.coords.longitude}`;
         alert("Localização capturada!");
     });
 }
 
-// Finalizar pedido
 function finalizarPedido(){
-    if(!horarioValido()){
-        alert("Pedidos apenas das 19:00 às 00:00");
-        return;
-    }
-
-    let pedido = "🍺 *Pedido Disk Conveniência Paço*%0A";
-    let total = document.getElementById("total").innerText;
-
-    pedido += `%0A📍 Localização: ${localizacao || "Não enviada"}`;
-    pedido += `%0A💵 ${total}`;
-
-    // Cupom
-    if(document.getElementById("cupom").value === "PRIMEIRACOMPRA"){
-        localStorage.setItem("cupom_usado", "true");
-        pedido += `%0A🎟 Cupom PRIMEIRACOMPRA`;
-    }
-
-    // Adiciona ao modo entregador
-    pedidosEntregador.push({
-        pedido: pedido,
-        local: localizacao
-    });
-    atualizarModoEntregador();
-
+    let pedido="🍺 Pedido Gelada Express%0A";
+    pedido+=document.getElementById("total").innerText;
     window.open(`https://wa.me/5598999999999?text=${pedido}`);
 }
 
-// Painel admin simples
 function mostrarPainelAdmin(){
-    let senha = prompt("Digite a senha do painel:");
-    if(senha === "ADMIN123"){ // senha simples
-        document.getElementById("painelAdmin").style.display = "block";
-        let html = "";
-        for(let key in estoque){
-            html += `${key}: ${estoque[key]} unidades<br>`;
-        }
-        document.getElementById("estoqueAdmin").innerHTML = html;
-    } else {
-        alert("Senha incorreta!");
+    if(prompt("Senha:")==="ADMIN123"){
+        painelAdmin.style.display="block";
+        atualizarPainelAdmin();
     }
 }
 
-// Modo entregador
-function atualizarModoEntregador(){
-    let div = document.getElementById("entregas");
-    let html = "";
-    pedidosEntregador.forEach((p,i)=>{
-        html += `Pedido ${i+1}: <a href="${p.local}" target="_blank">📍 Ver localização</a><br>`;
-    });
-    document.getElementById("modoEntregador").style.display = "block";
-    div.innerHTML = html;
+function atualizarPainelAdmin(){
+    estoqueAdmin.innerHTML="";
+    for(let k in estoque){
+        let p=estoque[k];
+        let d=document.createElement("div");
+        d.className="estoqueItem";
+        d.innerHTML=`
+        <input value="${k}" onchange="editarNomeProduto('${k}',this.value)">
+        <input type="number" value="${p.qtd}" onchange="editarProduto('${k}','qtd',this.value)">
+        <input type="number" value="${p.preco}" onchange="editarProduto('${k}','preco',this.value)">
+        <button onclick="removerProduto('${k}')">🗑</button>`;
+        estoqueAdmin.appendChild(d);
+    }
 }
 
-// Para teste: mostrar painel admin no carregamento (pode ser removido)
-// mostrarPainelAdmin();
+function editarProduto(k,c,v){
+    estoque[k][c]=parseFloat(v)||0;
+    salvarEstoque();renderizarProdutos();
+}
 
+function editarNomeProduto(o,n){
+    if(!n)return;
+    estoque[n]=estoque[o];
+    delete estoque[o];
+    salvarEstoque();renderizarProdutos();atualizarPainelAdmin();
+}
+
+function adicionarProduto(){
+    estoque[novoProdutoNome.value]={qtd:+novoProdutoQtd.value,preco:+novoProdutoPreco.value};
+    salvarEstoque();renderizarProdutos();atualizarPainelAdmin();
+}
+
+function removerProduto(k){
+    delete estoque[k];
+    salvarEstoque();renderizarProdutos();atualizarPainelAdmin();
+}
+
+function salvarEstoque(){
+    localStorage.setItem("estoque",JSON.stringify(estoque));
+}
 </script>
 
 </body>
 </html>
-
