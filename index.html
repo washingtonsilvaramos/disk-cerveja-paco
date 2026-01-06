@@ -8,27 +8,17 @@
 <style>
 :root{
     --primary:#f7c600;
-    --dark:#0b0b0b;
-    --dark2:#121212;
-    --card:#1f1f1f;
     --success:#25d366;
     --danger:#ff4444;
 }
 
-/* RESET */
-*{
-    box-sizing:border-box;
-    font-family:'Segoe UI',Arial,Helvetica,sans-serif;
-}
-
+*{box-sizing:border-box;font-family:'Segoe UI',Arial;}
 body{
     margin:0;
     background:radial-gradient(circle at top,#1a1a1a,#000);
     color:#fff;
     padding-bottom:140px;
 }
-
-/* HEADER */
 header{
     background:linear-gradient(135deg,#f7c600,#ffb300);
     color:#000;
@@ -37,7 +27,6 @@ header{
     font-size:26px;
     font-weight:900;
 }
-
 .subheader{
     background:#0f0f0f;
     text-align:center;
@@ -45,49 +34,32 @@ header{
     font-size:14px;
     color:var(--primary);
 }
-
-/* CONTAINER */
-.container{
-    padding:16px;
-    max-width:650px;
-    margin:auto;
-}
-
-/* TITULOS */
+.container{padding:16px;max-width:650px;margin:auto;}
 .section-title{
     margin:28px 0 14px;
     font-size:20px;
     font-weight:bold;
     color:var(--primary);
-    border-left:5px solid var(--primary);
-    padding-left:10px;
 }
-
-/* PRODUTOS */
 .card{
-    background:linear-gradient(160deg,#1e1e1e,#141414);
-    border-radius:18px;
-    padding:16px;
-    margin-bottom:14px;
+    background:#1b1b1b;
+    border-radius:16px;
+    padding:14px;
+    margin-bottom:12px;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    box-shadow:0 6px 18px rgba(0,0,0,.6);
 }
-
 .qty{
     width:70px;
-    padding:10px;
+    padding:8px;
     border-radius:10px;
     border:none;
-    text-align:center;
-    font-size:16px;
     background:#000;
     color:#fff;
+    text-align:center;
 }
-
-/* INPUTS */
-select,input[type=text],input[type=number]{
+input,select{
     width:100%;
     padding:14px;
     border-radius:14px;
@@ -96,78 +68,49 @@ select,input[type=text],input[type=number]{
     background:#1a1a1a;
     color:#fff;
 }
-
-/* BOTÕES */
 button{
     width:100%;
     padding:18px;
     background:linear-gradient(135deg,#25d366,#1ebe5d);
     border:none;
     color:#000;
-    font-size:20px;
+    font-size:18px;
     font-weight:900;
     border-radius:18px;
-    cursor:pointer;
     margin-top:20px;
 }
-
-button:hover{filter:brightness(1.1);}
-
 .total{
-    font-size:28px;
+    font-size:26px;
     text-align:center;
     color:var(--primary);
     margin-top:20px;
-    font-weight:bold;
 }
-
-/* WHATSAPP */
 .whatsapp{
     position:fixed;
     bottom:20px;
     right:20px;
-    background:linear-gradient(135deg,#25d366,#1ebe5d);
-    color:#000;
-    width:74px;
-    height:74px;
+    background:#25d366;
+    width:70px;
+    height:70px;
     border-radius:50%;
     display:flex;
-    justify-content:center;
     align-items:center;
-    font-size:36px;
+    justify-content:center;
+    font-size:34px;
     text-decoration:none;
-    box-shadow:0 8px 24px rgba(0,0,0,.8);
+    color:#000;
 }
-
-/* PAINEL */
-#painelAdmin,#modoEntregador{
+#painelAdmin{
+    display:none;
     background:#111;
     border-radius:18px;
     padding:16px;
     margin-top:25px;
-    display:none;
 }
-
-.estoqueItem{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-    margin-bottom:10px;
-}
-
-.estoqueItem input{
-    width:80px;
-    padding:6px;
-    border-radius:10px;
-}
-
-.entregarBtn{
-    background:var(--danger);
-    color:#fff;
-    border:none;
-    padding:8px 14px;
-    border-radius:10px;
-}
+.estoqueItem{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;}
+.estoqueItem input{width:80px;padding:6px;border-radius:8px;}
+.estoqueItem button{background:var(--danger);color:#fff;border:none;padding:6px 10px;border-radius:8px;}
+.relatorio{background:#1c1c1c;padding:10px;border-radius:10px;margin-top:10px;}
 </style>
 </head>
 
@@ -181,9 +124,6 @@ button:hover{filter:brightness(1.1);}
 <div class="section-title">🍺 Produtos</div>
 <div id="produtosContainer"></div>
 
-<div class="section-title">🎟 Cupom</div>
-<input type="text" id="cupom" placeholder="Digite o cupom">
-
 <div class="section-title">📍 Entrega</div>
 <select id="bairro" onchange="calcularTotal()">
 <option value="5">Centro - R$5</option>
@@ -194,23 +134,24 @@ button:hover{filter:brightness(1.1);}
 
 <button onclick="pegarLocalizacao()">📍 Usar minha localização</button>
 
+<div class="section-title">🏠 Endereço</div>
+<input id="nomeCliente" placeholder="Nome">
+<input id="rua" placeholder="Rua">
+<input id="numero" placeholder="Número">
+<input id="complemento" placeholder="Complemento">
+<input id="referencia" placeholder="Referência">
+
 <div class="total" id="total">Total: R$ 0,00</div>
 
 <button onclick="finalizarPedido()">Finalizar Pedido no WhatsApp</button>
 <button onclick="mostrarPainelAdmin()">🔑 Painel Administrativo</button>
 
 <div id="painelAdmin">
-<h3>📦 Painel de Estoque</h3>
+<h3>📦 Estoque</h3>
 <div id="estoqueAdmin"></div>
-<input type="text" id="novoProdutoNome" placeholder="Nome">
-<input type="number" id="novoProdutoQtd" placeholder="Qtd">
-<input type="number" id="novoProdutoPreco" placeholder="Preço">
-<button onclick="adicionarProduto()">➕ Adicionar</button>
-</div>
 
-<div id="modoEntregador">
-<h3>🛵 Entregas</h3>
-<div id="entregas"></div>
+<h3>📊 Relatório de Vendas</h3>
+<div id="relatorioVendas"></div>
 </div>
 
 </div>
@@ -218,28 +159,26 @@ button:hover{filter:brightness(1.1);}
 <a class="whatsapp" href="https://wa.me/5598981102515" target="_blank">💬</a>
 
 <script>
-/* === JAVASCRIPT ORIGINAL – SEM ALTERAÇÕES === */
+const VALOR_MINIMO = 20;
+
 let estoque = JSON.parse(localStorage.getItem("estoque")) || {
-    skol:{qtd:50,preco:6.5},
-    brahma:{qtd:50,preco:6.5},
-    heineken:{qtd:30,preco:11},
-    coca:{qtd:40,preco:6},
-    amendoim:{qtd:40,preco:5}
+    Skol:{qtd:50,preco:6.5},
+    Brahma:{qtd:50,preco:6.5},
+    Heineken:{qtd:30,preco:11},
+    Coca:{qtd:40,preco:6}
 };
 
+let vendas = JSON.parse(localStorage.getItem("vendas")) || [];
 let localizacao="";
-let pedidosEntregador=[];
 
 function renderizarProdutos(){
-    const c=document.getElementById("produtosContainer");
-    c.innerHTML="";
+    produtosContainer.innerHTML="";
     for(let k in estoque){
-        const p=estoque[k];
-        const d=document.createElement("div");
+        let d=document.createElement("div");
         d.className="card";
-        d.innerHTML=`${k} (R$ ${p.preco.toFixed(2)})
-        <input type="number" id="${k}" class="qty" value="0" min="0" oninput="calcularTotal()">`;
-        c.appendChild(d);
+        d.innerHTML=`${k} (R$ ${estoque[k].preco.toFixed(2)})
+        <input type="number" id="${k}" class="qty" min="0" value="0" oninput="calcularTotal()">`;
+        produtosContainer.appendChild(d);
     }
 }
 renderizarProdutos();
@@ -247,16 +186,13 @@ renderizarProdutos();
 function calcularTotal(){
     let total=0;
     for(let k in estoque){
-        let i=document.getElementById(k);
-        if(!i)continue;
-        let q=parseInt(i.value)||0;
-        if(q>estoque[k].qtd){i.value=estoque[k].qtd;q=estoque[k].qtd;}
+        let q=document.getElementById(k)?.value||0;
         total+=q*estoque[k].preco;
     }
-    if(cupom.value==="PRIMEIRACOMPRA"&&!localStorage.getItem("cupom_usado")) total-=5;
     total+=parseFloat(bairro.value);
-    document.getElementById("total").innerText="Total: R$ "+total.toFixed(2);
+    totalDiv.innerText="Total: R$ "+total.toFixed(2);
 }
+const totalDiv=document.getElementById("total");
 
 function pegarLocalizacao(){
     navigator.geolocation.getCurrentPosition(p=>{
@@ -266,15 +202,32 @@ function pegarLocalizacao(){
 }
 
 function finalizarPedido(){
-    let pedido="🍺 Pedido Gelada Express%0A";
-    pedido+=document.getElementById("total").innerText;
-    window.open(`https://wa.me/5598981102515?text=${pedido}`);
+    let total=parseFloat(totalDiv.innerText.replace("Total: R$",""));
+    if(total<VALOR_MINIMO){
+        alert(`Pedido mínimo R$ ${VALOR_MINIMO}`);
+        return;
+    }
+
+    let pedido="🍺 *Pedido Gelada Express*%0A";
+    for(let k in estoque){
+        let q=document.getElementById(k).value;
+        if(q>0) pedido+=`• ${k}: ${q}%0A`;
+    }
+    pedido+=`%0A${totalDiv.innerText}%0A`;
+    pedido+=`%0A🏠 ${rua.value}, ${numero.value}`;
+    if(localizacao) pedido+=`%0A📍 ${localizacao}`;
+
+    vendas.push({data:new Date().toLocaleString(),total});
+    localStorage.setItem("vendas",JSON.stringify(vendas));
+
+    window.open(`https://wa.me/5598999999999?text=${pedido}`);
 }
 
 function mostrarPainelAdmin(){
     if(prompt("Senha:")==="ADMIN123"){
         painelAdmin.style.display="block";
         atualizarPainelAdmin();
+        atualizarRelatorio();
     }
 }
 
@@ -285,38 +238,22 @@ function atualizarPainelAdmin(){
         let d=document.createElement("div");
         d.className="estoqueItem";
         d.innerHTML=`
-        <input value="${k}" onchange="editarNomeProduto('${k}',this.value)">
-        <input type="number" value="${p.qtd}" onchange="editarProduto('${k}','qtd',this.value)">
-        <input type="number" value="${p.preco}" onchange="editarProduto('${k}','preco',this.value)">
-        <button onclick="removerProduto('${k}')">🗑</button>`;
+        <input value="${k}">
+        <input type="number" value="${p.qtd}">
+        <input type="number" value="${p.preco}">
+        `;
         estoqueAdmin.appendChild(d);
     }
 }
 
-function editarProduto(k,c,v){
-    estoque[k][c]=parseFloat(v)||0;
-    salvarEstoque();renderizarProdutos();
-}
-
-function editarNomeProduto(o,n){
-    if(!n)return;
-    estoque[n]=estoque[o];
-    delete estoque[o];
-    salvarEstoque();renderizarProdutos();atualizarPainelAdmin();
-}
-
-function adicionarProduto(){
-    estoque[novoProdutoNome.value]={qtd:+novoProdutoQtd.value,preco:+novoProdutoPreco.value};
-    salvarEstoque();renderizarProdutos();atualizarPainelAdmin();
-}
-
-function removerProduto(k){
-    delete estoque[k];
-    salvarEstoque();renderizarProdutos();atualizarPainelAdmin();
-}
-
-function salvarEstoque(){
-    localStorage.setItem("estoque",JSON.stringify(estoque));
+function atualizarRelatorio(){
+    relatorioVendas.innerHTML="";
+    vendas.forEach(v=>{
+        let d=document.createElement("div");
+        d.className="relatorio";
+        d.innerText=`${v.data} - R$ ${v.total.toFixed(2)}`;
+        relatorioVendas.appendChild(d);
+    });
 }
 </script>
 
